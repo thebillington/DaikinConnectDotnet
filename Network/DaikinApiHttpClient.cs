@@ -6,6 +6,7 @@ public class DaikinApiHttpClient {
 
     public string? _clientId { get; set; }
     private readonly string? _clientSecret;
+    private readonly string? _redirectUri;
 
     public DaikinApiHttpClient(HttpClient client, IConfiguration configuration)
     {
@@ -13,6 +14,7 @@ public class DaikinApiHttpClient {
         _configuration = configuration;
         _clientId = _configuration["DaikinClientID"];
         _clientSecret = Environment.GetEnvironmentVariable("DAIKIN_CLIENT_SECRET");
+        _redirectUri = _configuration["RedirectURI"];
     }
 
     public async Task<string?> GetAccessToken( string code )
@@ -23,7 +25,7 @@ public class DaikinApiHttpClient {
             $"client_id={_clientId}",
             $"client_secret={_clientSecret}",
             $"code={code}",
-            $"redirect_uri=https://chief-colt-novel.ngrok-free.app"
+            $"redirect_uri={_redirectUri}"
         };
         tokenFetchUriBuilder.Query = string.Join('&', authQuery);
         
@@ -67,7 +69,7 @@ public class DaikinApiHttpClient {
             "response_type=code",
             $"client_id={_clientId}",
             $"scope=openid%20onecta:basic.integration",
-            "redirect_uri=https://chief-colt-novel.ngrok-free.app"
+            $"redirect_uri={_redirectUri}"
         };
         ssoUriBuiler.Query = string.Join('&', ssoQuery);
         return ssoUriBuiler.ToString();
