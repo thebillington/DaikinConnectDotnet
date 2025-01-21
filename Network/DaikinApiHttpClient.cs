@@ -15,7 +15,7 @@ public class DaikinApiHttpClient {
         _clientSecret = Environment.GetEnvironmentVariable("DAIKIN_CLIENT_SECRET");
     }
 
-    public async Task<string?> getAccessToken( string code )
+    public async Task<string?> GetAccessToken( string code )
     {
         var tokenFetchUriBuilder = new UriBuilder("https://idp.onecta.daikineurope.com/v1/oidc/token");
         var authQuery = new []{
@@ -27,21 +27,39 @@ public class DaikinApiHttpClient {
         };
         tokenFetchUriBuilder.Query = string.Join('&', authQuery);
         
-        // This has to be a post request even though all the data is in url params - content is null
         var authResponse = await _client.PostAsync(tokenFetchUriBuilder.Uri, null);
         if (authResponse.IsSuccessStatusCode)
         {
             var data = await authResponse.Content.ReadAsStringAsync();
-            var access_token = JsonDocument.Parse(data).RootElement.GetProperty("access_token").GetString();
-            return access_token;
+            return JsonDocument.Parse(data).RootElement.GetProperty("access_token").GetString();
         }
         else
         {
-            return "-1";
+            return null;
         }
     }
 
-    public string getDaikinSsoUri()
+    public async Task<string?> GetDeviceData( string accessToken ) {
+        
+        var httpRequestMessage = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri("https://api.onecta.daikineurope.com/v1/gateway-devices"),
+            Headers = { {"Authorization",$"Bearer {accessToken}"} }
+        };
+        var authResponse = await _client.SendAsync(httpRequestMessage);
+
+        if (authResponse.IsSuccessStatusCode)
+        {
+            return await authResponse.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            return "There was an error reading device data, try again later...";
+        }
+    }
+
+    public string GetDaikinSsoUri()
     {
         var ssoUriBuiler = new UriBuilder("https://idp.onecta.daikineurope.com/v1/oidc/authorize");
         var ssoQuery = new []

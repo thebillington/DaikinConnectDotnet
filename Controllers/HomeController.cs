@@ -20,16 +20,16 @@ public class HomeController : Controller
         string? deviceData = null;
         if (code != null)
         {
-            var accessToken = await _client.getAccessToken(code);
-            if (accessToken != "-1")
+            var accessToken = await _client.GetAccessToken(code);
+            if (accessToken != null)
             {
-
+                deviceData = await _client.GetDeviceData(accessToken);
             }
             else {
-                deviceData = "There was an error fetching device data from the Daikin API, try again later...";
+                deviceData = "There was an error getting the access token for the Daikin API, try again later...";
             }
         }
-        var daikinAPIModel = new DaikinAPIModel{ DaikinAuthURL = _client.getDaikinSsoUri(), DeviceData = deviceData };
+        var daikinAPIModel = new DaikinAPIModel{ DaikinAuthURL = _client.GetDaikinSsoUri(), DeviceData = deviceData };
         return View(daikinAPIModel);
     }
 

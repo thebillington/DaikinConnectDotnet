@@ -3,11 +3,7 @@
     ViewData["Title"] = "Daikin Connect Dotnet";
 }
 
-<div>
-    <main>
-    <div style="display: @(Model.DeviceData == null ? "none" : "block");">
-        <p>@Model.DeviceData</p>
-    </div>
-    <a href="@Model.DaikinAuthURL">Fetch Data</a>
-    </main>
+<div style="display: @(Model.DeviceData == null ? "none" : "block");">
+    <textarea style="height:800px; width:1200px;">@Model.DeviceData</textarea>
 </div>
+<a href="@Model.DaikinAuthURL">Fetch Data</a>
