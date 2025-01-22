@@ -15,7 +15,7 @@ If you're new to dotnet you can use [this tutorial](https://learn.microsoft.com/
 
 ### Project setup
 
-1. Pull this repository (`git clone https://github.com/DaikinConnectDotnet/`)
+1. Pull this repository (`git clone https://github.com/thebillington/DaikinConnectDotnet/`)
 2. Open the repository in Visual Studio Code and run it
 
 ### Setting up ngrok
